@@ -29,7 +29,7 @@ public class ClientHandler implements Runnable{
             while (true){
                 request = in.readLine();
                 if (request.equals("quit")) {
-                    System.out.println("[SERVER] CLIENT DISCONNECTED EXITING");
+                    System.out.println("[SERVER] CLIENT DISCONNECTED");
                     break;
                 }
 
@@ -77,7 +77,6 @@ public class ClientHandler implements Runnable{
     public void deleteFromMap() throws IOException {
         String[] newWord = request.split("#");
         String deleteWord = newWord[0];
-        System.out.println(deleteWord);
         if (obj.containsKey(deleteWord)){
                obj.remove(deleteWord);
                applyToFile();

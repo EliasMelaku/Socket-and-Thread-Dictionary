@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.Objects;
 
@@ -62,6 +63,7 @@ public class ClientHome extends javax.swing.JFrame {
         deleteButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        setResizable(false);
         addWindowListener(exitListener);
 
         setTitle("Know-it-all");
@@ -297,7 +299,14 @@ public class ClientHome extends javax.swing.JFrame {
      */
     public static void main(String args[]) throws IOException {
 //        ############## server connection ##################
-        socket = new Socket(SERVER_IP, SERVER_PORT);
+
+        try{
+            socket = new Socket(SERVER_IP, SERVER_PORT);
+        }catch (ConnectException e){
+            JOptionPane.showMessageDialog(null, "Couldn't connect to server. Run the server and try again", "Server Down", JOptionPane.WARNING_MESSAGE);
+            System.exit(0);
+        }
+
 
 //       ##################### THE GUI ####################################
 
@@ -335,7 +344,7 @@ public class ClientHome extends javax.swing.JFrame {
         String searchString = searchTextField.getText();
 
         if (searchString.equals("")){
-            JOptionPane.showMessageDialog(this, "Input all word to search", "Missing Field", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Input a word to search", "Missing Field", JOptionPane.WARNING_MESSAGE);
         }
         else{
             out.println(searchString);
@@ -347,6 +356,7 @@ public class ClientHome extends javax.swing.JFrame {
                 searchResultTextArea.setText("Word: " + serverResponseSplit[0] + "\nDefinition: " + serverResponseSplit[1]);
             }
             else{
+                searchTextField.setText("");
                 searchResultTextArea.setText("");
                 JOptionPane.showMessageDialog(this, serverResponse);
 
@@ -385,6 +395,7 @@ public class ClientHome extends javax.swing.JFrame {
 
 
     }
+//    ################# Delete From Map ###################################
 
     private void deleteFromMap() throws IOException {
         inputFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -406,6 +417,7 @@ public class ClientHome extends javax.swing.JFrame {
             else {
                 JOptionPane.showMessageDialog(this, serverResponse, "Success", JOptionPane.INFORMATION_MESSAGE);
             }
+            removeWordTextField.setText("");
         }
 
 
